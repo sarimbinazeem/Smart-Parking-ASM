@@ -1,6 +1,7 @@
 INCLUDE Irvine32.inc
 INCLUDE Core.inc
 INCLUDE UI.inc
+INCLUDE File.inc
 
 .code
 
@@ -25,6 +26,10 @@ HandleEntry PROC
     CountBike:
         ;increments bikes count
         inc BikesEntered
+    
+    SaveEntryData:
+        ; Save data after successful vehicle entry
+        call SaveParkingData
 
     EntryHandled:
         ret
@@ -72,13 +77,18 @@ HandleExit PROC USES ebx ecx edx
     BikeExited:
         add BikeRevenue, edx
 
+    SaveExitData:
+        ; Save data after successful vehicle exit
+        call SaveParkingData
+
     ExitHandled:
         ret
 
 HandleExit ENDP
 
 main PROC
-
+    ; Load previously saved parking data
+    call LoadParkingData
     MainLoop:
         call Clrscr
 
